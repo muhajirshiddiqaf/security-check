@@ -18,7 +18,7 @@ const PORT = 3000;
 // Security middleware
 app.use(helmet()); // Add security headers
 app.use(cors({
-    origin: 'http://localhost:3000', // Restrict CORS
+    origin: ['http://localhost:3000','http://192.168.10.2','https://192.168.10.2'], // Restrict CORS
     credentials: true
 }));
 
