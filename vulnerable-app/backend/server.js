@@ -16,9 +16,16 @@ const app = express();
 const PORT = 3000;
 
 // Security middleware
-app.use(helmet()); // Add security headers
+app.use(helmet({
+    contentSecurityPolicy: false,
+    hsts: false,
+    crossOriginEmbedderPolicy: false,
+    crossOriginOpenerPolicy: false,
+    crossOriginResourcePolicy: false
+}));
+
 app.use(cors({
-    origin: ['http://localhost:3000','http://192.168.10.2','https://192.168.10.2'], // Restrict CORS
+    origin: 'http://localhost:3000', // Restrict CORS
     credentials: true
 }));
 
@@ -80,8 +87,8 @@ app.get('/api/secure/csrf-token', (req, res) => {
     const token = Math.random().toString(36).substring(2);
     res.cookie('csrfToken', token, {
         httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'strict'
+        secure: false, // Force HTTP
+        sameSite: 'lax'
     });
     res.json({ token });
 });

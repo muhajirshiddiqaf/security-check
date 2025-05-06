@@ -55,7 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const password = document.getElementById('password').value;
 
         try {
-            const response = await fetch('/api/login', {
+            const response = await fetch('http://192.168.10.2:3000/api/login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ username, password })
@@ -85,7 +85,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         try {
             // Vulnerable: SQL Injection through query parameters
-            const response = await fetch(`/api/search?q=${encodeURIComponent(query)}&page=${page}&limit=${limit}`);
+            const response = await fetch(`http://192.168.10.2:3000/api/search?q=${encodeURIComponent(query)}&page=${page}&limit=${limit}`);
             const results = await response.json();
             
             // Vulnerable: XSS in search results
@@ -109,7 +109,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         try {
-            const response = await fetch('/api/comments', {
+            const response = await fetch('http://192.168.10.2:3000/api/comments', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ content, userId })
@@ -143,7 +143,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const formData = new FormData();
             formData.append('file', file);
 
-            const response = await fetch('/api/upload', {
+            const response = await fetch('http://192.168.10.2:3000/api/upload', {
                 method: 'POST',
                 body: formData
             });
@@ -165,7 +165,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const command = document.getElementById('command').value;
 
         try {
-            const response = await fetch('/api/execute', {
+            const response = await fetch('http://192.168.10.2:3000/api/execute', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ command })
@@ -194,7 +194,7 @@ document.addEventListener('DOMContentLoaded', () => {
         };
 
         try {
-            const response = await fetch('/api/vulnerable/users/update', {
+            const response = await fetch('http://192.168.10.2:3000/api/vulnerable/users/update', {
                 method: 'POST',
                 headers: { 
                     'Content-Type': 'application/json',
@@ -232,7 +232,7 @@ document.addEventListener('DOMContentLoaded', () => {
         };
 
         try {
-            const response = await fetch('/api/secure/users/update', {
+            const response = await fetch('http://192.168.10.2:3000/api/secure/users/update', {
                 method: 'POST',
                 headers: { 
                     'Content-Type': 'application/json',
@@ -263,7 +263,7 @@ document.addEventListener('DOMContentLoaded', () => {
     addEventListenerIfExists('deleteAllCommentsForm', 'submit', async (e) => {
         e.preventDefault();
         try {
-            const response = await fetch('/api/admin/deleteAll', {
+            const response = await fetch('http://192.168.10.2:3000/api/admin/deleteAll', {
                 method: 'POST',
                 // Vulnerable: No CSRF token
             });
@@ -283,7 +283,7 @@ document.addEventListener('DOMContentLoaded', () => {
         e.preventDefault();
         const url = document.getElementById('redirectUrl').value;
         // Vulnerable: Open redirect
-        window.location.href = `/redirect?url=${encodeURIComponent(url)}`;
+        window.location.href = `http://192.168.10.2:3000/redirect?url=${encodeURIComponent(url)}`;
     });
 
     // ===== VULNERABLE IMPLEMENTATIONS =====
@@ -294,7 +294,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const query = document.getElementById('vulnerableSearchQuery')?.value;
 
         try {
-            const response = await fetch(`/api/vulnerable/search?q=${encodeURIComponent(query)}`);
+            const response = await fetch(`http://192.168.10.2:3000/api/vulnerable/search?q=${encodeURIComponent(query)}`);
             const results = await response.json();
             
             const resultsElement = document.getElementById('vulnerableSearchResults');
@@ -317,7 +317,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const content = document.getElementById('vulnerableCommentContent')?.value;
 
         try {
-            const response = await fetch('/api/vulnerable/comments', {
+            const response = await fetch('http://192.168.10.2:3000/api/vulnerable/comments', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ content, userId: 1 })
@@ -346,7 +346,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const command = document.getElementById('vulnerableCommand')?.value;
 
         try {
-            const response = await fetch('/api/vulnerable/execute', {
+            const response = await fetch('http://192.168.10.2:3000/api/vulnerable/execute', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ command })
@@ -372,7 +372,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const password = document.getElementById('vulnerablePassword')?.value;
 
         try {
-            const response = await fetch('/api/vulnerable/login', {
+            const response = await fetch('http://192.168.10.2:3000/api/vulnerable/login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ username, password })
@@ -401,7 +401,7 @@ document.addEventListener('DOMContentLoaded', () => {
     addEventListenerIfExists('deleteAllCommentsForm', 'submit', async (e) => {
         e.preventDefault();
         try {
-            const response = await fetch('/api/vulnerable/admin/deleteAll', {
+            const response = await fetch('http://192.168.10.2:3000/api/vulnerable/admin/deleteAll', {
                 method: 'POST',
                 // Vulnerable: No CSRF token
             });
@@ -427,7 +427,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const query = document.getElementById('secureSearchQuery')?.value;
 
         try {
-            const response = await fetch(`/api/secure/search?q=${encodeURIComponent(query)}`);
+            const response = await fetch(`http://192.168.10.2:3000/api/secure/search?q=${encodeURIComponent(query)}`);
             const results = await response.json();
             
             const resultsElement = document.getElementById('secureSearchResults');
@@ -450,7 +450,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const content = document.getElementById('secureCommentContent')?.value;
 
         try {
-            const response = await fetch('/api/secure/comments', {
+            const response = await fetch('http://192.168.10.2:3000/api/secure/comments', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ content, userId: 1 })
@@ -479,7 +479,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const command = document.getElementById('secureCommand')?.value;
 
         try {
-            const response = await fetch('/api/secure/execute', {
+            const response = await fetch('http://192.168.10.2:3000/api/secure/execute', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ command })
@@ -505,7 +505,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const password = document.getElementById('securePassword')?.value;
 
         try {
-            const response = await fetch('/api/secure/login', {
+            const response = await fetch('http://192.168.10.2:3000/api/secure/login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ username, password })
@@ -537,7 +537,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 .find(row => row.startsWith('csrf-token='))
                 ?.split('=')[1];
 
-            const response = await fetch('/api/secure/admin/deleteAll', {
+            const response = await fetch('http://192.168.10.2:3000/api/secure/admin/deleteAll', {
                 method: 'POST',
                 headers: {
                     'X-CSRF-Token': csrfToken
@@ -563,7 +563,7 @@ document.addEventListener('DOMContentLoaded', () => {
         sqlInjectionForm.addEventListener('submit', (e) => {
             e.preventDefault();
             const query = document.getElementById('searchQuery').value;
-            fetch(`/api/vulnerable/search?q=${encodeURIComponent(query)}`)
+            fetch(`http://192.168.10.2:3000/api/vulnerable/search?q=${encodeURIComponent(query)}`)
                 .then(response => response.json())
                 .then(data => displayResult('sqlInjectionResult', data))
                 .catch(error => displayResult('sqlInjectionResult', error.message, true));
@@ -575,7 +575,7 @@ document.addEventListener('DOMContentLoaded', () => {
         sqlInjectionSecureForm.addEventListener('submit', (e) => {
             e.preventDefault();
             const query = document.getElementById('searchQuerySecure').value;
-            fetch(`/api/secure/search?q=${encodeURIComponent(query)}`)
+            fetch(`http://192.168.10.2:3000/api/secure/search?q=${encodeURIComponent(query)}`)
                 .then(response => response.json())
                 .then(data => displayResult('sqlInjectionSecureResult', data))
                 .catch(error => displayResult('sqlInjectionSecureResult', error.message, true));
@@ -588,7 +588,7 @@ document.addEventListener('DOMContentLoaded', () => {
         xssForm.addEventListener('submit', (e) => {
             e.preventDefault();
             const content = document.getElementById('commentContent').value;
-            fetch('/api/vulnerable/comments', {
+            fetch('http://192.168.10.2:3000/api/vulnerable/comments', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ content, userId: 1 })
@@ -604,7 +604,7 @@ document.addEventListener('DOMContentLoaded', () => {
         xssSecureForm.addEventListener('submit', (e) => {
             e.preventDefault();
             const content = document.getElementById('commentContentSecure').value;
-            fetch('/api/secure/comments', {
+            fetch('http://192.168.10.2:3000/api/secure/comments', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ content, userId: 1 })
@@ -621,7 +621,7 @@ document.addEventListener('DOMContentLoaded', () => {
         commandInjectionForm.addEventListener('submit', (e) => {
             e.preventDefault();
             const command = document.getElementById('command').value;
-            fetch('/api/vulnerable/execute', {
+            fetch('http://192.168.10.2:3000/api/vulnerable/execute', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ command })
@@ -637,7 +637,7 @@ document.addEventListener('DOMContentLoaded', () => {
         commandInjectionSecureForm.addEventListener('submit', (e) => {
             e.preventDefault();
             const command = document.getElementById('commandSecure').value;
-            fetch('/api/secure/execute', {
+            fetch('http://192.168.10.2:3000/api/secure/execute', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ command })
@@ -655,7 +655,7 @@ document.addEventListener('DOMContentLoaded', () => {
             e.preventDefault();
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
-            fetch('/api/vulnerable/login', {
+            fetch('http://192.168.10.2:3000/api/vulnerable/login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ username, password })
@@ -672,7 +672,7 @@ document.addEventListener('DOMContentLoaded', () => {
             e.preventDefault();
             const username = document.getElementById('usernameSecure').value;
             const password = document.getElementById('passwordSecure').value;
-            fetch('/api/secure/login', {
+            fetch('http://192.168.10.2:3000/api/secure/login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ username, password })
@@ -688,7 +688,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (csrfForm) {
         csrfForm.addEventListener('submit', (e) => {
             e.preventDefault();
-            fetch('/api/vulnerable/admin/deleteAll', {
+            fetch('http://192.168.10.2:3000/api/vulnerable/admin/deleteAll', {
                 method: 'POST'
             })
             .then(response => response.json())
@@ -702,7 +702,7 @@ document.addEventListener('DOMContentLoaded', () => {
         csrfSecureForm.addEventListener('submit', (e) => {
             e.preventDefault();
             const token = document.getElementById('csrfToken').value;
-            fetch('/api/secure/admin/deleteAll', {
+            fetch('http://192.168.10.2:3000/api/secure/admin/deleteAll', {
                 method: 'POST',
                 headers: {
                     'X-CSRF-Token': token
@@ -731,7 +731,7 @@ document.addEventListener('DOMContentLoaded', () => {
             formData.append('file', file);
 
             try {
-                const response = await fetch('/api/vulnerable/upload', {
+                const response = await fetch('http://192.168.10.2:3000/api/vulnerable/upload', {
                     method: 'POST',
                     body: formData
                 });
@@ -759,7 +759,7 @@ document.addEventListener('DOMContentLoaded', () => {
             formData.append('file', file);
 
             try {
-                const response = await fetch('/api/secure/upload', {
+                const response = await fetch('http://192.168.10.2:3000/api/secure/upload', {
                     method: 'POST',
                     body: formData
                 });
@@ -777,7 +777,7 @@ document.addEventListener('DOMContentLoaded', () => {
         sessionForm.addEventListener('submit', (e) => {
             e.preventDefault();
             const data = document.getElementById('sessionData').value;
-            fetch('/api/vulnerable/session', {
+            fetch('http://192.168.10.2:3000/api/vulnerable/session', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ data })
@@ -793,7 +793,7 @@ document.addEventListener('DOMContentLoaded', () => {
         sessionSecureForm.addEventListener('submit', (e) => {
             e.preventDefault();
             const data = document.getElementById('sessionDataSecure').value;
-            fetch('/api/secure/session', {
+            fetch('http://192.168.10.2:3000/api/secure/session', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ data })
@@ -810,16 +810,16 @@ document.addEventListener('DOMContentLoaded', () => {
         redirectForm.addEventListener('submit', (e) => {
             e.preventDefault();
             const url = document.getElementById('redirectUrl').value;
-            window.location.href = `/api/vulnerable/redirect?url=${encodeURIComponent(url)}`;
+            window.location.href = `http://192.168.10.2:3000/api/vulnerable/redirect?url=${encodeURIComponent(url)}`;
         });
     }
 
     const redirectSecureForm = document.getElementById('redirectSecureForm');
     if (redirectSecureForm) {
-        redirectSecureForm.addEventListener('submit', (e) => {
+        redirectForm.addEventListener('submit', (e) => {
             e.preventDefault();
             const url = document.getElementById('redirectUrlSecure').value;
-            window.location.href = `/api/secure/redirect?url=${encodeURIComponent(url)}`;
+            window.location.href = `http://192.168.10.2:3000/api/secure/redirect?url=${encodeURIComponent(url)}`;
         });
     }
 
@@ -829,7 +829,7 @@ document.addEventListener('DOMContentLoaded', () => {
         apiAuthForm.addEventListener('submit', (e) => {
             e.preventDefault();
             const apiKey = document.getElementById('apiKey').value;
-            fetch('/api/vulnerable/data', {
+            fetch('http://192.168.10.2:3000/api/vulnerable/data', {
                 headers: {
                     'X-API-Key': apiKey
                 }
@@ -845,7 +845,7 @@ document.addEventListener('DOMContentLoaded', () => {
         apiAuthSecureForm.addEventListener('submit', (e) => {
             e.preventDefault();
             const apiKey = document.getElementById('apiKeySecure').value;
-            fetch('/api/secure/data', {
+            fetch('http://192.168.10.2:3000/api/secure/data', {
                 headers: {
                     'Authorization': `Bearer ${apiKey}`
                 }
@@ -862,7 +862,7 @@ document.addEventListener('DOMContentLoaded', () => {
         loggingForm.addEventListener('submit', (e) => {
             e.preventDefault();
             const data = document.getElementById('userData').value;
-            fetch('/api/vulnerable/log', {
+            fetch('http://192.168.10.2:3000/api/vulnerable/log', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ data })
@@ -878,7 +878,7 @@ document.addEventListener('DOMContentLoaded', () => {
         loggingSecureForm.addEventListener('submit', (e) => {
             e.preventDefault();
             const data = document.getElementById('userDataSecure').value;
-            fetch('/api/secure/log', {
+            fetch('http://192.168.10.2:3000/api/secure/log', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ data })
@@ -890,7 +890,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Initialize CSRF token for secure form
-    fetch('/api/secure/csrf-token')
+    fetch('http://192.168.10.2:3000/api/secure/csrf-token')
         .then(response => response.json())
         .then(data => {
             const csrfTokenInput = document.getElementById('csrfToken');
