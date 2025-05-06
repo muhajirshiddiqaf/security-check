@@ -9,7 +9,6 @@ const path = require('path');
 const fs = require('fs');
 const multer = require('multer');
 const helmet = require('helmet');
-const rateLimit = require('express-rate-limit');
 const { db, initializeDatabase, dbQueries } = require('./db');
 
 const app = express();
@@ -28,13 +27,6 @@ app.use(cors({
     origin: 'http://localhost:3000', // Restrict CORS
     credentials: true
 }));
-
-// Rate limiting
-const limiter = rateLimit({
-    windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 100 // limit each IP to 100 requests per windowMs
-});
-app.use(limiter);
 
 // Configure multer for file uploads
 const storage = multer.diskStorage({
